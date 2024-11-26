@@ -47,3 +47,44 @@ button:hover {
     margin-top: 20px;
     font-size: 20px;
 }
+#timer {
+    font-size: 1.8em; /* Slightly larger than the problem text */
+    font-weight: bold; /* Make it stand out */
+    color: #FF4500; /* Eye-catching orange color */
+    background-color: #f9f9f9; /* Subtle background */
+    border: 2px solid #FF4500; /* Match the timer text color */
+    border-radius: 10px; /* Rounded edges for a modern look */
+    padding: 10px; /* Spacing inside the timer box */
+    margin-bottom: 20px; /* Space between the timer and other elements */
+    display: inline-block; /* Align it with the content flow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: gold;
+    border-radius: 50%;
+    animation: sparkle-animation 5s ease-in-out;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.8;
+    box-shadow: 0 0 8px gold;
+}
+
+@keyframes sparkle-animation {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+}
+

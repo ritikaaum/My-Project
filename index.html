@@ -24,14 +24,20 @@
     </div>
     <div class="container" id="questionary">
         <h1>Questions</h1>
+        <!-- Timer Display -->
+        <div id="timer">Time Left: 10s</div>
+        
+        <!-- Current Question Display -->
+        <div id="currentQuestion">Question 0 of 0</div>
+
         <div class="problem">
             <span id="num1"></span> + <span id="num2"></span> = 
             <input type="number" id="userAnswer" placeholder="Your answer" />
         </div>
         <button id="checkAnswer">Check Answer</button>
         <div>
-            <label for="">True: </label><span id="correct"></span>
-            <label for="">False: </label><span id="wrong"></span>
+            <label for="">True: </label><span id="correct">0</span>
+            <label for="">False: </label><span id="wrong">0</span>
         </div>
         <button id="nextProblem">Next Problem</button>
     </div>
