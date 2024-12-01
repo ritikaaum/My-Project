@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Addition</title>
+    <title>Learn Arithmetic Operations</title>
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
     <div class="container" id="settings" hidden>
         <h1>Settings</h1>
         <div class="problem">
-            <input type="number" id="rangeFrom" placeholder="range from" />
-            <input type="number" id="rangeTo" placeholder="range to" />
-            <input type="number" id="numberOfQuestions" placeholder="number of Questions" />
+            <input type="number" id="rangeFrom" placeholder="Range from" />
+            <input type="number" id="rangeTo" placeholder="Range to" />
+            <input type="number" id="numberOfQuestions" placeholder="Number of Questions" />
         </div>
         <div class="operations">
-            <label for="add_operation">Addition </label><input type="checkbox" name="add_operation" id="add_operation">
-            <label for="sub_operation">Subtraction </label><input type="checkbox" name="sub_operation" id="sub_operation">
-            <label for="mul_operation">Multiplication </label><input type="checkbox" name="mul_operation" id="mul_operation">
-            <label for="div_operation">Division </label><input type="checkbox" name="div_operation" id="div_operation">
+            <label for="add_operation">Addition</label>
+            <input type="checkbox" name="add_operation" id="add_operation">
+            <label for="sub_operation">Subtraction</label>
+            <input type="checkbox" name="sub_operation" id="sub_operation">
+            <label for="mul_operation">Multiplication</label>
+            <input type="checkbox" name="mul_operation" id="mul_operation">
+            <label for="div_operation">Division</label>
+            <input type="checkbox" name="div_operation" id="div_operation">
         </div><br>
         <button id="startQuestions">Start</button>
     </div>
+
     <div class="container" id="questionary">
         <h1>Questions</h1>
-        <!-- Timer Display -->
-        <div id="timer">Time Left: 10s</div>
         
+        <!-- Timer Display -->
+        <div id="timer">Time Left: 30s</div>
+
         <!-- Current Question Display -->
         <div id="currentQuestion">Question 0 of 0</div>
 
         <div class="problem">
-            <span id="num1"></span> + <span id="num2"></span> = 
+            <span id="num1"></span> <span id="operation"></span> <span id="num2"></span> =
             <input type="number" id="userAnswer" placeholder="Your answer" />
         </div>
         <button id="checkAnswer">Check Answer</button>
@@ -40,8 +47,17 @@
             <label for="">Wrong: </label><span id="wrong">0</span>
         </div>
         <button id="nextProblem">Next Problem</button>
+
+        <!-- Modal for Result -->
+        <div id="resultModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Quiz Complete!</h2>
+                <p id="scoreResult"></p>
+            </div>
+        </div>
     </div>
-    
+
     <script src="new.js"></script>
 </body>
 </html>
