@@ -3,61 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Arithmetic Operations</title>
+    <title>Learn Arithmetic Calculations</title>
     <link rel="stylesheet" href="style.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js library -->
 </head>
 <body>
-    <div class="container" id="settings" hidden>
-        <h1>Settings</h1>
-        <div class="problem">
-            <input type="number" id="rangeFrom" placeholder="Range from" />
-            <input type="number" id="rangeTo" placeholder="Range to" />
-            <input type="number" id="numberOfQuestions" placeholder="Number of Questions" />
+    <div id="app">
+        <h1>Learn Arithmetic Calculations</h1>
+
+        <!-- Settings Form -->
+        <div id="settings">
+            <h2>Settings</h2>
+            <label for="numQuestions">Number of Questions:</label>
+            <input type="number" id="numQuestions" min="1" max="20" value="5"><br>
+            
+            <label for="numberRange">Number Range:</label>
+            <input type="number" id="numberRange" min="1" value="10"><br>
+            
+            <label for="operations">Arithmetic Operation:</label>
+            <select id="operations">
+                <option value="add">Addition</option>
+                <option value="subtract">Subtraction</option>
+                <option value="multiply">Multiplication</option>
+                <option value="divide">Division</option>
+            </select><br>
+            
+            <label for="timer">Timer (seconds per question):</label>
+            <input type="number" id="timer" min="5" value="10"><br>
+            
+            <button id="startBtn">Start Quiz</button>
         </div>
-        <div class="operations">
-            <label for="add_operation">Addition</label>
-            <input type="checkbox" name="add_operation" id="add_operation">
-            <label for="sub_operation">Subtraction</label>
-            <input type="checkbox" name="sub_operation" id="sub_operation">
-            <label for="mul_operation">Multiplication</label>
-            <input type="checkbox" name="mul_operation" id="mul_operation">
-            <label for="div_operation">Division</label>
-            <input type="checkbox" name="div_operation" id="div_operation">
-        </div><br>
-        <button id="startQuestions">Start</button>
-    </div>
 
-    <div class="container" id="questionary">
-        <h1>Questions</h1>
-        
-        <!-- Timer Display -->
-        <div id="timer">Time Left: 30s</div>
-
-        <!-- Current Question Display -->
-        <div id="currentQuestion">Question 0 of 0</div>
-
-        <div class="problem">
-            <span id="num1"></span> <span id="operation"></span> <span id="num2"></span> =
-            <input type="number" id="userAnswer" placeholder="Your answer" />
+        <!-- Questionnaire Section -->
+        <div id="questionnaire" style="display:none;">
+            <h2>Question <span id="currentQuestion">1</span> of <span id="totalQuestions">5</span></h2>
+            <p id="questionText"></p>
+            <input type="number" id="answerInput" placeholder="Your answer">
+            <button id="submitAnswerBtn">Submit</button>
+            <p id="feedback"></p>
+            <p id="timerText">Time Remaining: <span id="timeRemaining"></span> seconds</p>
         </div>
-        <button id="checkAnswer">Check Answer</button>
-        <div>
-            <label for="">Correct: </label><span id="correct">0</span>
-            <label for="">Wrong: </label><span id="wrong">0</span>
-        </div>
-        <button id="nextProblem">Next Problem</button>
 
-        <!-- Modal for Result -->
-        <div id="resultModal" class="modal">
-            <div class="modal-content">
-                <span class="close" id="closeModal">&times;</span>
-                <h2>Quiz Complete!</h2>
-                <p id="scoreResult"></p>
-            </div>
+        <!-- Results Section -->
+        <div id="result" style="display:none;">
+            <h2>Results</h2>
+            <p id="score"></p>
+            <p id="timeTaken"></p>
+            <canvas id="resultChart" width="400" height="400"></canvas>
         </div>
     </div>
 
-    <script src="new.js"></script>
+    <script src="new.js"></script> <!-- External JavaScript file -->
 </body>
 </html>

@@ -1,176 +1,125 @@
-var correctAnswers = 0;
-var wrongAnswers = 0;
-var randoms = [];
-var correct = 0;
-var wrong = 0;
-var count = 1; // Start from Question 1
-var numberOfQuestions = 20; // Default number of questions
-var timer = null; // Timer reference
-var timeLimit = 30; // Updated time limit to 30 seconds for each question
+let numQuestions = 5;
+let numberRange = 10;
+let operation = "add";
+let timerDuration = 10; // in seconds
+let currentQuestion = 0;
+let correctAnswers = 0;
+let startTime;
+let questions = [];
+let timerInterval;
 
-var operation = ''; // New variable to hold the operation type (addition, subtraction, or multiplication)
+document.getElementById("startBtn").addEventListener("click", startQuiz);
 
-function generateRandomNumbers(from, to) {
-    let num1 = Math.ceil(Math.random() * to) + from;
-    let num2 = Math.ceil(Math.random() * to) + from;
+function startQuiz() {
+    numQuestions = parseInt(document.getElementById("numQuestions").value);
+    numberRange = parseInt(document.getElementById("numberRange").value);
+    operation = document.getElementById("operations").value;
+    timerDuration = parseInt(document.getElementById("timer").value);
 
-    // Randomly select an operation
-    const operations = ['+', '-', '*']; // Operations: addition, subtraction, multiplication
-    operation = operations[Math.floor(Math.random() * operations.length)]; // Random operation
-
-    // Set numbers and operation in DOM
-    document.getElementById('num1').textContent = num1;
-    document.getElementById('num2').textContent = num2;
-    document.getElementById('operation').textContent = operation;
-
-    return [num1, num2];
+    generateQuestions();
+    document.getElementById("settings").style.display = "none";
+    document.getElementById("questionnaire").style.display = "block";
+    document.getElementById("totalQuestions").textContent = numQuestions;
+    showQuestion();
+    startTime = new Date();
 }
 
-function createSparkles() {
-    const container = document.getElementById('questionary');
-    for (let i = 0; i < 20; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.style.left = `${Math.random() * 100}%`;
-        sparkle.style.top = `${Math.random() * 100}%`;
-        container.appendChild(sparkle);
-
-        // Remove the sparkle after animation
-        setTimeout(() => sparkle.remove(), 1000);
+function generateQuestions() {
+    questions = [];
+    for (let i = 0; i < numQuestions; i++) {
+        const num1 = Math.floor(Math.random() * numberRange) + 1;
+        const num2 = Math.floor(Math.random() * numberRange) + 1;
+        questions.push({ num1, num2 });
     }
 }
 
-function checkAnswer() {
-    let answer = parseInt(document.getElementById('userAnswer').value);
-    let correctAnswer;
-
-    // Check the answer based on the operation
-    switch (operation) {
-        case '+':
-            correctAnswer = randoms[0] + randoms[1];
-            break;
-        case '-':
-            correctAnswer = randoms[0] - randoms[1];
-            break;
-        case '*':
-            correctAnswer = randoms[0] * randoms[1];
-            break;
-        default:
-            correctAnswer = 0;
+function showQuestion() {
+    if (currentQuestion >= numQuestions) {
+        endQuiz();
+        return;
     }
 
-    if (correctAnswer === answer) {
-        correct++;
-        document.getElementById('correct').textContent = correct;
+    const { num1, num2 } = questions[currentQuestion];
+    let questionText = `${num1} + ${num2}`;
+    if (operation === "subtract") questionText = `${num1} - ${num2}`;
+    if (operation === "multiply") questionText = `${num1} * ${num2}`;
+    if (operation === "divide") questionText = `${num1} ÷ ${num2}`;
 
-        // Trigger sparkle effect
-        createSparkles();
-    } else {
-        wrong++;
-        document.getElementById('wrong').textContent = wrong;
+    document.getElementById("questionText").textContent = questionText;
+    document.getElementById("currentQuestion").textContent = currentQuestion + 1;
 
-        // Show the correct answer
-        alert(`Wrong! The correct answer was ${correctAnswer}`);
-    }
-
-    // Stop the timer after the answer
-    clearInterval(timer);
-
-    // Disable the check answer button until the next question
-    document.getElementById('checkAnswer').disabled = true;
-
-    // Automatically proceed to the next question after a short delay (1.5 seconds)
-    setTimeout(() => callNextProblem(), 1500); // 1.5 seconds delay
+    startTimer();
 }
 
 function startTimer() {
-    let timeLeft = timeLimit;
-    document.getElementById('timer').textContent = `Time Left: ${timeLeft}s`;
-
-    timer = setInterval(() => {
+    let timeLeft = timerDuration;
+    document.getElementById("timeRemaining").textContent = timeLeft;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
         timeLeft--;
-        document.getElementById('timer').textContent = `Time Left: ${timeLeft}s`;
-
+        document.getElementById("timeRemaining").textContent = timeLeft;
         if (timeLeft <= 0) {
-            clearInterval(timer);
-            wrong++; // Increment wrong answers if time runs out
-            document.getElementById('wrong').textContent = wrong;
-
-            // Show the correct answer when time runs out
-            let correctAnswer;
-            switch (operation) {
-                case '+':
-                    correctAnswer = randoms[0] + randoms[1];
-                    break;
-                case '-':
-                    correctAnswer = randoms[0] - randoms[1];
-                    break;
-                case '*':
-                    correctAnswer = randoms[0] * randoms[1];
-                    break;
-                default:
-                    correctAnswer = 0;
-            }
-
-            alert(`Time's up! The correct answer was ${correctAnswer}`);
-
-            document.getElementById('checkAnswer').disabled = true;
-
-            // Automatically proceed to the next question after a short delay (1.5 seconds)
-            setTimeout(() => callNextProblem(), 1500); // 1.5 seconds delay
+            clearInterval(timerInterval);
+            checkAnswer(true); // Automatically move to the next question if time runs out
         }
     }, 1000);
 }
 
-function callNextProblem() {
-    if (count > numberOfQuestions) {
-        // Calculate the percentage score when the quiz is finished
-        let percentage = Math.round((correct / numberOfQuestions) * 100);
-        alert(`Quiz complete! You scored ${correct} out of ${numberOfQuestions} (${percentage}%)`);
+document.getElementById("submitAnswerBtn").addEventListener("click", () => checkAnswer(false));
 
-        // Optionally, display the result in the DOM
-        document.getElementById('result').textContent = `You scored ${percentage}% (${correct} out of ${numberOfQuestions})`;
-        return;
+function checkAnswer(timeOut) {
+    const userAnswer = parseFloat(document.getElementById("answerInput").value);
+    const { num1, num2 } = questions[currentQuestion];
+    let correctAnswer;
+
+    if (operation === "add") correctAnswer = num1 + num2;
+    if (operation === "subtract") correctAnswer = num1 - num2;
+    if (operation === "multiply") correctAnswer = num1 * num2;
+    if (operation === "divide") correctAnswer = (num1 / num2).toFixed(2);
+
+    if (!timeOut && userAnswer == correctAnswer) {
+        correctAnswers++;
+        document.getElementById("feedback").textContent = "Correct!";
+    } else {
+        document.getElementById("feedback").textContent = `Wrong! The correct answer is ${correctAnswer}.`;
     }
 
-    randoms = generateRandomNumbers(1, 10); // You can adjust the range if needed
-    document.getElementById('userAnswer').value = '';
-
-    // Update the current question number
-    document.getElementById('currentQuestion').textContent = `Question ${count} of ${numberOfQuestions}`;
-    count++;
-
-    clearInterval(timer); // Clear any existing timer
-    startTimer(); // Start a new timer
-
-    document.getElementById('checkAnswer').disabled = false; // Re-enable the button
+    currentQuestion++;
+    clearInterval(timerInterval);
+    setTimeout(() => {
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("answerInput").value = "";
+        showQuestion();
+    }, 1000);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    correctAnswers = 0;
-    wrongAnswers = 0;
+function endQuiz() {
+    const endTime = new Date();
+    const timeTaken = Math.floor((endTime - startTime) / 1000);
 
-    // Prompt the user for the number of questions if desired
-    numberOfQuestions = parseInt(prompt("Enter the number of questions (minimum 20):", 20));
-    if (isNaN(numberOfQuestions) || numberOfQuestions < 40) {
-        numberOfQuestions = 20; // Default to 40 if input is invalid or less than 40
-    }
+    document.getElementById("questionnaire").style.display = "none";
+    document.getElementById("result").style.display = "block";
 
-    randoms = generateRandomNumbers(1, 10); // Generate the first question
-    document.getElementById('correct').textContent = '0';
-    document.getElementById('wrong').textContent = '0';
-    document.getElementById('currentQuestion').textContent = `Question ${count} of ${numberOfQuestions}`; // Start display
+    const percentage = ((correctAnswers / numQuestions) * 100).toFixed(2);
 
-    startTimer(); // Start timer for the first question
+    document.getElementById("score").textContent = `You answered ${correctAnswers} out of ${numQuestions} questions correctly (${percentage}%).`;
+    document.getElementById("timeTaken").textContent = `Time taken: ${timeTaken} seconds.`;
 
-    document.getElementById('checkAnswer').addEventListener('click', checkAnswer);
+    renderChart(percentage);
+}
 
-    // Allow pressing Enter to check the answer
-    document.getElementById('userAnswer').addEventListener('keyup', function (event) {
-        if (event.key === 'Enter' && !document.getElementById('checkAnswer').disabled) {
-            checkAnswer();
-        }
+function renderChart(percentage) {
+    const ctx = document.getElementById("resultChart").getContext("2d");
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["Correct Answers", "Incorrect Answers"],
+            datasets: [
+                {
+                    data: [percentage, 100 - percentage],
+                    backgroundColor: ["#4CAF50", "#F44336"],
+                },
+            ],
+        },
     });
-
-    document.getElementById('nextProblem').addEventListener('click', callNextProblem);
-});
+}
